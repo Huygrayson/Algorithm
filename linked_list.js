@@ -26,7 +26,7 @@ class LinkedList{
     // add new node to the end
     push(val){
         const newNode = new Node(val)
-        if(this.head === null){
+        if(this.length === 0){
             this.head = newNode;
             this.tail = this.head
         }
@@ -48,6 +48,10 @@ class LinkedList{
         this.tail = newTail;
         this.tail.next = null;
         this.length--;
+        if(this.length === 0){
+            this.head = null;
+            this.tail = null;
+        }
         return currentNode
     }
     // remove the first node
@@ -117,7 +121,7 @@ class LinkedList{
             for(var i = 0; i < pos - 1; i++){
                 currentNode = currentNode.next;
             }
-            var temp = currentNode;
+            var temp = currentNode.next;
             currentNode.next = insertedNode;
             insertedNode.next = temp;
         }
@@ -166,6 +170,7 @@ list.push("Hello");
 list.push("Huy");
 // list.show();
 list.push("Hi");
+list.push("Na")
 list.show();
-list.reverse();
+list.insert(2, "123");
 list.show();

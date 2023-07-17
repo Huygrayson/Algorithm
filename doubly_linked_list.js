@@ -2,6 +2,7 @@ class Node{
     constructor(val){
         this.val = val;
         this.next = null;
+        this.prev = null;
     }
 }
 
@@ -20,12 +21,13 @@ class LinkedList{
     // add new node to the end
     push(val){
         const newNode = new Node(val)
-        if(this.head === null){
+        if(this.length === 0){
             this.head = newNode;
-            this.tail = this.head
+            this.tail = newNode
         }
         else{
             this.tail.next = newNode;
+            newNode.prev = this.tail;
             this.tail = newNode
         }
         this.length++
@@ -41,7 +43,12 @@ class LinkedList{
         }
         this.tail = newTail;
         this.tail.next = null;
+        this.tail.prev = this.tail;
         this.length--;
+        if(this.length === 0){
+            this.head = null;
+            this.tail = null;
+        }
         return currentNode
     }
     // remove the first node
@@ -49,6 +56,7 @@ class LinkedList{
         if(!this.head) return undefined;
         var newHead = this.head.next;
         this.head = newHead;
+        this.head.prev = null;
         this.length--;
         if(this.length === 0){
             this.tail = null;
@@ -73,11 +81,21 @@ class LinkedList{
         if(pos < 0 || pos >= this.length){
             return null;
         }
-        for(var i = 0; i < this.length; i++){
-            if(i === pos){
-                return currentNode
+        if(pos <= Math.floor(this.length/2)){
+            for(var i = 0; i < this.length; i++){
+                if(i === pos){
+                    return currentNode
+                }
+                currentNode = currentNode.next;
             }
-            currentNode = currentNode.next;
+        }
+        else{
+            for(var i = this.length - 1; i >= 0; i--){
+                if(i === pos){
+                    return currentNode
+                }
+                currentNode = currentNode.prev;
+            }
         }
     }
     // change the value of a node via it's position in the list
@@ -86,12 +104,23 @@ class LinkedList{
         if(pos < 0 || pos >= this.length){
             return "Invalid position";
         }
-        for(var i = 0; i < this.length; i++){
-            if(i === pos){
-                currentNode.val = val;
-                return currentNode;
+        if(pos <= Math.floor(this.length/2)){
+            for(var i = 0; i < this.length; i++){
+                if(i === pos){
+                    currentNode.val = val;
+                    return currentNode;
+                }
+                currentNode = currentNode.next;
             }
-            currentNode = currentNode.next;
+        }
+        else{
+            for(var i = this.length - 1; i >= 0; i--){
+                if(i === pos){
+                    currentNode.val = val;
+                    return currentNode;
+                }
+                currentNode = currentNode.prev;
+            }
         }
     }
     // insert a node to a specific position
@@ -107,13 +136,24 @@ class LinkedList{
             this.push(val)
         }
         else{
-            var currentNode = this.head;
-            for(var i = 0; i < pos - 1; i++){
-                currentNode = currentNode.next;
+            if(pos <= Math.floor(this.length/2)){
+                var currentNode = this.head;
+                for(var i = 0; i < pos - 1; i++){
+                    currentNode = currentNode.next;
+                }
+                var temp = currentNode.next;
+                currentNode.next = insertedNode;
+                insertedNode.next = temp;
             }
-            var temp = currentNode;
-            currentNode.next = insertedNode;
-            insertedNode.next = temp;
+            else{
+                var currentNode = this.tail;
+                for(var i = this.length - 1; i > pos + 1; i--){
+                    currentNode = currentNode.prev;
+                }
+                var temp = currentNode.prev;
+                currentNode.prev = insertedNode;
+                insertedNode.prev = temp;
+            }
         }
         this.length++;
     } 
@@ -137,20 +177,6 @@ class LinkedList{
         }
         this.length--;
     }
-    // reverse the linked list in place
-    reverse(){
-        var currNode = this.head;
-        this.head = this.tail;
-        this.tail = currNode;
-        var next;
-        var prev = null;
-        for(var i = 0; i< this.length; i++){
-            next = currNode.next;
-            currNode.next = prev;
-            prev = currNode;
-            currNode = next;
-        }
-    }
 }
 
 const list = new LinkedList();
@@ -161,5 +187,5 @@ list.push("Huy");
 // list.show();
 list.push("Hi");
 list.show();
-list.reverse();
-list.show();
+list.insert(2, "123");
+list.show()
