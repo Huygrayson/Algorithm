@@ -29,22 +29,14 @@ class Stack{
         }
         this.size++;
     }
-    pop(){
+    shift(){
         if(!this.start) return undefined;
-        var currentNode = this.start;
-        var newEnd = currentNode;
-        while(currentNode.next){
-            newEnd = currentNode;
-            currentNode = currentNode.next
-        }
-        this.end = newEnd;
-        this.end.next = null;
+        var newHead = this.start.next;
+        this.start = newHead;
         this.size--;
         if(this.size === 0){
-            this.start = null;
             this.end = null;
         }
-        return currentNode
     }
 }
 
@@ -55,9 +47,9 @@ stack.push("C");
 stack.push("D");
 stack.push("E");
 stack.show();
-stack.pop();
-stack.pop();
-stack.pop();
-stack.pop();
-stack.pop();
+stack.shift();
+stack.shift();
+stack.shift();
+stack.shift();
+stack.shift();
 stack.show();
