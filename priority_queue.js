@@ -1,4 +1,11 @@
-class MaxBinaryHeap {
+class Node {
+    constructor(val, prior) {
+        this.value = val;
+        this.priority = prior;
+    }
+}
+
+class PriorityQueue {
     constructor() {
         this.arr = [];
     }
@@ -7,10 +14,16 @@ class MaxBinaryHeap {
         console.log(this.arr);
     }
 
+    enqueue(val, prior) {
+        let newNode = new Node(val, prior);
+        this.arr.push(newNode);
+        this.bubbleUp();
+    }
+
     bubbleUp() {
         var currIndex = this.arr.length - 1;
         while(currIndex > 0) {
-            if(this.arr[currIndex] > this.arr[Math.floor((currIndex - 1)/2)]) {
+            if(this.arr[currIndex].priority < this.arr[Math.floor((currIndex - 1)/2)].priority) {
                 [this.arr[currIndex], this.arr[Math.floor((currIndex - 1)/2)]] = [this.arr[Math.floor((currIndex - 1)/2)], this.arr[currIndex]];
                 currIndex = Math.floor((currIndex - 1)/2)
             }
@@ -20,12 +33,7 @@ class MaxBinaryHeap {
         }
     }
 
-    insert(value) {
-        this.arr.push(value);
-        this.bubbleUp();
-    }
-
-    extractMax() {
+    dequeue() {
         [this.arr[0], this.arr[this.arr.length - 1]] = [this.arr[this.arr.length - 1], this.arr[0]];
         this.arr.pop();
         var currIndex = 0;
@@ -38,10 +46,10 @@ class MaxBinaryHeap {
                 leftIndex = 2*currIndex + 1;
                 if(2*currIndex + 2 < this.arr.length - 1) {
                     rightIndex = 2*currIndex + 2;
-                    if(Math.max(this.arr[currIndex], this.arr[leftIndex], this.arr[rightIndex]) === this.arr[currIndex]) {
+                    if(Math.min(this.arr[currIndex].priority, this.arr[leftIndex].priority, this.arr[rightIndex].priority) === this.arr[currIndex].priority) {
                         finish = true;
                     }
-                    else if(this.arr[leftIndex] > this.arr[rightIndex]) {
+                    else if(this.arr[leftIndex].priority < this.arr[rightIndex].priority) {
                         [this.arr[currIndex], this.arr[leftIndex]] = [this.arr[leftIndex], this.arr[currIndex]]
                         currIndex = leftIndex
                     }
@@ -51,7 +59,7 @@ class MaxBinaryHeap {
                     }
                 }
                 else{
-                    if(this.arr[currIndex] > this.arr[leftIndex]) {
+                    if(this.arr[currIndex].priority < this.arr[leftIndex].priority) {
                         [this.arr[currIndex], this.arr[leftIndex]] = [this.arr[leftIndex], this.arr[currIndex]]
                         currIndex = leftIndex
                     }
@@ -67,14 +75,11 @@ class MaxBinaryHeap {
     }
 }
 
-const maxBinaryHeap = new MaxBinaryHeap();
-
-maxBinaryHeap.insert(10);
-maxBinaryHeap.insert(20);
-maxBinaryHeap.insert(30);
-maxBinaryHeap.insert(25);
-maxBinaryHeap.insert(27);
-maxBinaryHeap.insert(35);
-maxBinaryHeap.insert(31);
-maxBinaryHeap.extractMax();
-maxBinaryHeap.show()
+const prioQueue = new PriorityQueue();
+prioQueue.enqueue(10, 3);
+prioQueue.enqueue(11, 2);
+prioQueue.enqueue(15, 4);
+prioQueue.enqueue(16, 2);
+prioQueue.enqueue(17, 1);
+prioQueue.dequeue();
+prioQueue.show()
